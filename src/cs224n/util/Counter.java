@@ -77,8 +77,8 @@ public class Counter <E> implements Serializable {
    */
   public void setCount(E key, double count) {
 	// remove the old count for this key from the total, then add the new count
-	totalCount -= getCount(key);
-	totalCount += count;
+    totalCount -= getCount(key);
+    totalCount += count;
 	  
     entries.put(key, count);
   }
@@ -116,13 +116,7 @@ public class Counter <E> implements Serializable {
    * @return the counter's total
    */
   public double totalCount() {
-//    double total = 0.0;
-//    for (Map.Entry<E, Double> entry : entries.entrySet()) {
-//      total += entry.getValue();
-//    }
-//    return total;
-	  
-	  return totalCount;
+    return totalCount;
   }
 
   /**
