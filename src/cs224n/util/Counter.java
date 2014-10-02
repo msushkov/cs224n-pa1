@@ -15,6 +15,10 @@ import java.util.Collection;
  */
 public class Counter <E> implements Serializable {
   Map<E, Double> entries;
+  
+  // Stores the total count in this counter; updated as the counter is modified.
+  // NOTE: Not thread-safe!
+  double totalCount = 0.0;
 
   /**
    * The elements in the counter.
@@ -72,6 +76,10 @@ public class Counter <E> implements Serializable {
    * @param count
    */
   public void setCount(E key, double count) {
+	// remove the old count for this key from the total, then add the new count
+	totalCount -= getCount(key);
+	totalCount += count;
+	  
     entries.put(key, count);
   }
 
@@ -83,6 +91,7 @@ public class Counter <E> implements Serializable {
    */
   public void incrementCount(E key, double increment) {
     setCount(key, getCount(key) + increment);
+    totalCount += increment;
   }
 
   /**
@@ -102,23 +111,24 @@ public class Counter <E> implements Serializable {
   }
 
   /**
-   * Finds the total of all counts in the counter.  This implementation iterates
-   * through the entire counter every time this method is called.
+   * Returns the total of all counts in the counter.
    *
    * @return the counter's total
    */
   public double totalCount() {
-    double total = 0.0;
-    for (Map.Entry<E, Double> entry : entries.entrySet()) {
-      total += entry.getValue();
-    }
-    return total;
+//    double total = 0.0;
+//    for (Map.Entry<E, Double> entry : entries.entrySet()) {
+//      total += entry.getValue();
+//    }
+//    return total;
+	  
+	  return totalCount;
   }
 
   /**
    * Finds the key with maximum count.  This is a linear operation, and ties are broken arbitrarily.
    *
-   * @return a key with minumum count
+   * @return a key with maximum count
    */
   public E argMax() {
     double maxCount = Double.NEGATIVE_INFINITY;
