@@ -7,31 +7,31 @@ import cs224n.util.Counter;
 import cs224n.util.Pair;
 
 public class PMIModel implements WordAligner {
-	Counter<String> wordCountSource = new Counter<String>();
-	Counter<String> wordCountTarget = new Counter<String>();
-	Counter<Pair<String, String>> pairCounts = new Counter<Pair<String, String>>();
+	Counter<String> c_f = new Counter<String>();
+	Counter<String> c_e = new Counter<String>();
+	Counter<Pair<String, String>> c_fe = new Counter<Pair<String, String>>();
 
 	@Override
 	public Alignment align(SentencePair sentencePair) {
 		Alignment alignment = new Alignment();
 		
-		List<String> sourceWords = new ArrayList<String>(sentencePair.getSourceWords());
-		sourceWords.add(0, NULL_WORD);
-		List<String> targetWords = sentencePair.getTargetWords();
+		List<String> f_words = new ArrayList<String>(sentencePair.getSourceWords());
+		f_words.add(0, NULL_WORD);
+		List<String> e_words = sentencePair.getTargetWords();
 		
-		double totalPairCounts = pairCounts.totalCount();
-		double totalCountSource = wordCountSource.totalCount();
-		double totalCountTarget = wordCountTarget.totalCount();
+		double totalPairCounts = c_fe.totalCount();
+		double totalCountSource = c_f.totalCount();
+		double totalCountTarget = c_e.totalCount();
 		
-		for (int i = 0; i < targetWords.size(); i++) {
-			String targetWord = targetWords.get(i);
+		for (int i = 0; i < e_words.size(); i++) {
+			String targetWord = e_words.get(i);
 			double maxValue = 0;
 			int maxIndex = 0;
-			for (int j = 0; j < sourceWords.size(); j++) {
-				String sourceWord = sourceWords.get(j);
-				double p_fe = pairCounts.getCount(new Pair<String, String>(sourceWord, targetWord)) / totalPairCounts;
-				double p_e = wordCountTarget.getCount(targetWord) / totalCountTarget;
-				double p_f = wordCountSource.getCount(sourceWord) / totalCountSource;
+			for (int j = 0; j < f_words.size(); j++) {
+				String sourceWord = f_words.get(j);
+				double p_fe = c_fe.getCount(new Pair<String, String>(sourceWord, targetWord)) / totalPairCounts;
+				double p_e = c_e.getCount(targetWord) / totalCountTarget;
+				double p_f = c_f.getCount(sourceWord) / totalCountSource;
 				double value = p_fe / (p_e * p_f);
 				if (value > maxValue) {
 					maxValue = value;
@@ -47,21 +47,21 @@ public class PMIModel implements WordAligner {
 	@Override
 	public void train(List<SentencePair> trainingData) {
 		for (SentencePair pair : trainingData) {
-			List<String> sourceWords = new ArrayList<String>(pair.getSourceWords());
-			sourceWords.add(0, NULL_WORD);
-			List<String> targetWords = pair.getTargetWords();
+			List<String> f_words = new ArrayList<String>(pair.getSourceWords());
+			f_words.add(0, NULL_WORD);
+			List<String> e_words = pair.getTargetWords();
 
-			for (String word : sourceWords) {
-				wordCountSource.incrementCount(word, 1);
+			for (String word : f_words) {
+				c_f.incrementCount(word, 1);
 			}
 
-			for (String word : targetWords) {
-				wordCountTarget.incrementCount(word, 1);
+			for (String word : e_words) {
+				c_e.incrementCount(word, 1);
 			}
 
-			for (String sourceWord : sourceWords) {
-				for (String targetWord : targetWords) {
-					pairCounts.incrementCount(new Pair<String, String>(sourceWord, targetWord), 1);
+			for (String sourceWord : f_words) {
+				for (String targetWord : e_words) {
+					c_fe.incrementCount(new Pair<String, String>(sourceWord, targetWord), 1);
 				}
 			}
 		}
