@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cs224n.util.Counter;
+import cs224n.util.CounterMap;
 import cs224n.util.Pair;
 
 public class PMIModel implements WordAligner {
 	Counter<String> c_f = new Counter<String>();
 	Counter<String> c_e = new Counter<String>();
-	Counter<Pair<String, String>> c_fe = new Counter<Pair<String, String>>();
+	CounterMap<String, String> c_fe = new CounterMap<String, String>();
 
 	@Override
 	public Alignment align(SentencePair sentencePair) {
@@ -25,7 +26,7 @@ public class PMIModel implements WordAligner {
 			int maxIndex = 0;
 			for (int j = 0; j < f_words.size(); j++) {
 				String curr_f_word = f_words.get(j);
-				double p_fe = c_fe.getCount(new Pair<String, String>(curr_f_word, curr_e_word)) / c_fe.totalCount();
+				double p_fe = c_fe.getCount(curr_f_word, curr_e_word) / c_fe.totalCount();
 				double p_e = c_e.getCount(curr_e_word) / c_e.totalCount();
 				double p_f = c_f.getCount(curr_f_word) / c_f.totalCount();
 				double value = p_fe / (p_e * p_f);
@@ -57,7 +58,7 @@ public class PMIModel implements WordAligner {
 
 			for (String f_word : f_words) {
 				for (String e_word : e_words) {
-					c_fe.incrementCount(new Pair<String, String>(f_word, e_word), 1);
+					c_fe.incrementCount(f_word, e_word, 1);
 				}
 			}
 		}
