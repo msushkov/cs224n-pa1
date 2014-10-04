@@ -17,7 +17,7 @@ public class PMIModel implements WordAligner {
 		Alignment alignment = new Alignment();
 		
 		List<String> f_words = new ArrayList<String>(sentencePair.getSourceWords());
-		f_words.add(0, NULL_WORD);
+		f_words.add(NULL_WORD);
 		List<String> e_words = sentencePair.getTargetWords();
 		
 		for (int i = 0; i < e_words.size(); i++) {
@@ -35,7 +35,9 @@ public class PMIModel implements WordAligner {
 					maxIndex = j;
 				}
 			}
-			alignment.addPredictedAlignment(i, maxIndex);
+			if (maxIndex != f_words.size()-1) {
+				alignment.addPredictedAlignment(i, maxIndex);
+			}
 		}
 		
 		return alignment;
@@ -45,7 +47,7 @@ public class PMIModel implements WordAligner {
 	public void train(List<SentencePair> trainingData) {
 		for (SentencePair pair : trainingData) {
 			List<String> f_words = new ArrayList<String>(pair.getSourceWords());
-			f_words.add(0, NULL_WORD);
+			f_words.add(NULL_WORD);
 			List<String> e_words = pair.getTargetWords();
 
 			for (String word : f_words) {
