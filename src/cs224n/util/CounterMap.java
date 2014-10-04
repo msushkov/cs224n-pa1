@@ -17,6 +17,10 @@ public class CounterMap<K, V> {
 
   private MapFactory<V, Double> mf;
   private Map<K, Counter<V>> counterMap;
+  
+  // Stores the total count; updated as the counter map is modified.
+  // NOTE: Not thread-safe!
+  double totalCount = 0.0;
 
   // -----------------------------------------------------------------------
 
@@ -53,6 +57,10 @@ public class CounterMap<K, V> {
    * Sets the count for a particular (key, value) pair.
    */
   public void setCount(K key, V value, double count) {
+    // remove the old count for this key, value from the total, then add the new count
+    totalCount -= getCount(key, value);
+    totalCount += count;
+      
     Counter<V> valueCounter = ensureCounter(key);
     valueCounter.setCount(value, count);
   }
@@ -63,6 +71,7 @@ public class CounterMap<K, V> {
   public void incrementCount(K key, V value, double count) {
     Counter<V> valueCounter = ensureCounter(key);
     valueCounter.incrementCount(value, count);
+    totalCount += count;
   }
 
   /**
@@ -89,16 +98,10 @@ public class CounterMap<K, V> {
   }
 
   /**
-   * Returns the total of all counts in sub-counters.  This
-   * implementation is linear; it recalculates the total each time.
+   * Returns the total of all counts in sub-counters.
    */
   public double totalCount() {
-    double total = 0.0;
-    for (Map.Entry<K, Counter<V>> entry : counterMap.entrySet()) {
-      Counter<V> counter = entry.getValue();
-      total += counter.totalCount();
-    }
-    return total;
+    return totalCount;
   }
 
   /**
