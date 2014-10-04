@@ -3,6 +3,7 @@ package cs224n.wordaligner;
 import java.util.List;
 
 import cs224n.util.Counter;
+import cs224n.util.CounterMap;
 import cs224n.util.Pair;
 
 /*
@@ -14,15 +15,15 @@ public abstract class IBMModel implements WordAligner {
     double EPSILON = 0.0001;
     
     // Parameters
-    Counter<Pair<String, String>> t_fe = new Counter<Pair<String, String>>();
-    Counter<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> q_jilm = new Counter<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>>();
+    CounterMap<String, String> t_fe = new CounterMap<String, String>();
+    CounterMap<Integer, Pair<Pair<Integer, Integer>, Integer>> q_jilm = new CounterMap<Integer, Pair<Pair<Integer, Integer>, Integer>>();
     
     // Counters
-    Counter<Pair<String, String>> C_ef = new Counter<Pair<String, String>>();
+    CounterMap<String, String> C_ef = new CounterMap<String, String>();
     Counter<String> C_e = new Counter<String>();
     
-    // C(i, j, l, m)
-    Counter<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> C_jilm = new Counter<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>>();
+    // C(j, i, l, m)
+    CounterMap<Integer, Pair<Pair<Integer, Integer>, Integer>> C_jilm = new CounterMap<Integer, Pair<Pair<Integer, Integer>, Integer>>();
     Counter<Pair<Pair<Integer, Integer>, Integer>> C_ilm = new Counter<Pair<Pair<Integer, Integer>, Integer>>(); 
     
     /*
