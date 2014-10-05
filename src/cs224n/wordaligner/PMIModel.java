@@ -5,7 +5,6 @@ import java.util.List;
 
 import cs224n.util.Counter;
 import cs224n.util.CounterMap;
-import cs224n.util.Pair;
 
 public class PMIModel implements WordAligner {
 	Counter<String> c_f = new Counter<String>();
