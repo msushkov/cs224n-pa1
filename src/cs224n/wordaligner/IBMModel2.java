@@ -8,6 +8,8 @@ import cs224n.util.Pair;
 
 public class IBMModel2 extends IBMModel {
 
+    private Random rand = new Random();
+    
     @Override
     public double q_jilm(int j, int i, int l, int m) {
         Pair<Pair<Integer, Integer>, Integer> ilm = new Pair<Pair<Integer, Integer>, Integer>(new Pair<Integer, Integer>(i, l), m);
@@ -16,11 +18,17 @@ public class IBMModel2 extends IBMModel {
 
     @Override
     public void train(List<SentencePair> trainingData) {
+        System.out.println("Starting train() for model 2...");
+        
         initParams(trainingData);
+        
         for (int p = 0; p < NUM_ITERS; p++) {
+            System.out.println("Model 2 iteration " + p);
+            
             clearCounts();
 
             // E-Step
+            System.out.println("E-step...");
             for (int k = 0; k < trainingData.size(); k++) {
                 List<String> f = trainingData.get(k).getSourceWords();
                 f.add(NULL_WORD);
@@ -48,6 +56,7 @@ public class IBMModel2 extends IBMModel {
             }
 
             // M-Step
+            System.out.println("M-step...");
             for (String e : c_ef.keySet()) {
                 for (String f : c_ef.getCounter(e).keySet()) {
                     t_fe.setCount(f, e, c_ef.getCount(e, f) / c_e.getCount(e));
@@ -61,12 +70,16 @@ public class IBMModel2 extends IBMModel {
                 }
             }
         }
+        
+        System.out.println("Finished train() for Model 2.");
     }
     
     /*
      * Run IBM Model 1 to initialize the parameters.
      */
     private void initParams(List<SentencePair> trainingData) {
+        System.out.println("Starting initParams()...");
+        
         // initialize t_fe to the output of model 1
         IBMModel1 model1 = new IBMModel1();
         model1.train(trainingData);
@@ -90,12 +103,14 @@ public class IBMModel2 extends IBMModel {
         }
         
         q_jilm = Counters.conditionalNormalize(q_jilm);
+        
+        System.out.println("Finished initParams().");
     }
     
     /*
      * Returns a random double between 0 and 0.1.
      */
     private double getRand() {
-        return (new Random()).nextDouble() / 10.0;
+        return rand.nextDouble() / 10.0;
     }
 }

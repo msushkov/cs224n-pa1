@@ -28,6 +28,8 @@ public abstract class IBMModel implements WordAligner {
     
 	@Override
 	public Alignment align(SentencePair sentencePair) {
+	    System.out.println("Starting align()...");
+	    
 		Alignment alignment = new Alignment();
 		
 		List<String> f_words = new ArrayList<String>(sentencePair.getSourceWords());
@@ -50,6 +52,8 @@ public abstract class IBMModel implements WordAligner {
 				alignment.addPredictedAlignment(i, maxIndex);
 			}
 		}
+		
+		System.out.println("Done with align().");
 		
 		return alignment;
 	}

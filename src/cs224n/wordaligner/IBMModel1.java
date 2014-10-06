@@ -13,6 +13,8 @@ public class IBMModel1 extends IBMModel {
     
     @Override
     public void train(List<SentencePair> trainingData) {
+        System.out.println("Starting train() for model 1...");
+        
         // count all the French words
         HashSet<String> fr_words = new HashSet<String>();
         for (SentencePair dataPoint : trainingData) {
@@ -22,11 +24,12 @@ public class IBMModel1 extends IBMModel {
         
         // Iterate a bunch of times; hopefully it converges by then
         for (int p = 0; p < NUM_ITERS; p++) {
-            System.out.println("Iteration " + p);
+            System.out.println("Model 1 iteration " + p);
             
             clearCounts();
 
             // E-Step
+            System.out.println("E-step...");
             for (int k = 0; k < trainingData.size(); k++) {
                 List<String> f = new ArrayList<String>(trainingData.get(k).getSourceWords());
                 f.add(NULL_WORD);
@@ -63,11 +66,14 @@ public class IBMModel1 extends IBMModel {
             }
             
             // M-Step
+            System.out.println("M-step...");
             for (String e : c_ef.keySet()) {
                 for (String f : c_ef.getCounter(e).keySet()) {
                     t_fe.setCount(f, e, c_ef.getCount(e, f) / c_e.getCount(e));
                 }
             }
+            
+            System.out.println("Finished train() for Model 1.");
         }
     }
 }
