@@ -16,7 +16,7 @@ public class IBMModel1 extends IBMModel {
         // count all the French words
         HashSet<String> fr_words = new HashSet<String>();
         for (SentencePair dataPoint : trainingData) {
-            fr_words.addAll(dataPoint.targetWords); // sourceWords
+            fr_words.addAll(dataPoint.sourceWords);
         }
         int numFWords = fr_words.size();
         
