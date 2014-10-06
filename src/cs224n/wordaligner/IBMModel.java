@@ -28,7 +28,7 @@ public abstract class IBMModel implements WordAligner {
     
 	@Override
 	public Alignment align(SentencePair sentencePair) {
-	    System.out.println("Starting align()...");
+	    //System.out.println("Starting align()...");
 	    
 		Alignment alignment = new Alignment();
 		
@@ -53,7 +53,7 @@ public abstract class IBMModel implements WordAligner {
 			}
 		}
 		
-		System.out.println("Done with align().");
+		//System.out.println("Done with align().");
 		
 		return alignment;
 	}
