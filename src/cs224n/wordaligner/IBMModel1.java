@@ -16,7 +16,7 @@ public class IBMModel1 extends IBMModel {
         // count all the French words
         HashSet<String> fr_words = new HashSet<String>();
         for (SentencePair dataPoint : trainingData) {
-            fr_words.addAll(dataPoint.sourceWords);
+            fr_words.addAll(dataPoint.targetWords); // sourceWords
         }
         int numFWords = fr_words.size();
         
@@ -70,55 +70,4 @@ public class IBMModel1 extends IBMModel {
             }
         }
     }
-    
-//    
-//    // Model 2
-//    @Override
-//    public void train(List<SentencePair> trainingData) {
-//        initParams();
-//        for (int p = 0; p < NUM_ITERS; p++) {
-//            clearCounts();
-//
-//            // E-Step
-//            for (int k = 0; k < trainingData.size(); k++) {
-//                List<String> f = trainingData.get(k).getSourceWords();
-//                f.add(NULL_WORD);
-//                List<String> e = trainingData.get(k).getTargetWords();
-//                for (int i = 0; i < f.size(); i++) {
-//                    // compute the normalization factor for delta
-//                    double deltaNormalization = 0.0;
-//                    for (int j = 0; j < e.size(); j++) {
-//                        deltaNormalization += q_jilm(j, i, e.size(), f.size()) * t_fe.getCount(f.get(i), e.get(j));
-//                    }
-//                    
-//                    for (int j = 0; j < e.size(); j++) {
-//                        double delta = q_jilm(j, i, e.size(), f.size()) * t_fe.getCount(f.get(i), e.get(j)) / deltaNormalization; 
-//
-//                        c_ef.incrementCount(e.get(i), f.get(j), delta);
-//                        c_e.incrementCount(e.get(i), delta);
-//                        
-//                        Pair<Integer, Integer> il = new Pair<Integer, Integer>(i, e.size());
-//                        Pair<Pair<Integer, Integer>, Integer> ilm = new Pair<Pair<Integer, Integer>, Integer>(il, f.size());
-//                        
-//                        c_jilm.incrementCount(j, ilm, delta);
-//                        c_ilm.incrementCount(ilm, delta);
-//                    }
-//                }
-//            }
-//            
-//            // M-Step
-//            for (String e : c_ef.keySet()) {
-//                for (String f : c_ef.getCounter(e).keySet()) {
-//                    t_fe.setCount(f, e, c_ef.getCount(e, f) / c_e.getCount(e));
-//                }
-//            }
-//            
-//            for (Integer j : c_jilm.keySet()) {
-//                for (Pair<Pair<Integer, Integer>, Integer> ilm : c_jilm.getCounter(j).keySet()) {                   
-//                    q_jilm.setCount(j, ilm, c_jilm.getCount(j, ilm) / c_ilm.getCount(ilm));
-//                }
-//            }
-//        }
-//    }
-
 }

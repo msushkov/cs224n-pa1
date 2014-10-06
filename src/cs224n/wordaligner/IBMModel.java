@@ -12,7 +12,7 @@ import cs224n.util.Pair;
  */
 public abstract class IBMModel implements WordAligner {
 
-    int NUM_ITERS = 100;
+    int NUM_ITERS = 50;
     
     // Parameters
     CounterMap<String, String> t_fe = new CounterMap<String, String>();
@@ -22,7 +22,7 @@ public abstract class IBMModel implements WordAligner {
     CounterMap<String, String> c_ef = new CounterMap<String, String>();
     Counter<String> c_e = new Counter<String>();
     
-    // C(j, i, l, m)
+    // c(j, i, l, m)
     CounterMap<Integer, Pair<Pair<Integer, Integer>, Integer>> c_jilm = new CounterMap<Integer, Pair<Pair<Integer, Integer>, Integer>>();
     Counter<Pair<Pair<Integer, Integer>, Integer>> c_ilm = new Counter<Pair<Pair<Integer, Integer>, Integer>>(); 
     
@@ -62,7 +62,6 @@ public abstract class IBMModel implements WordAligner {
     /*
      * To be implemented by Models 1 and 2 directly.
      */
-    //Pair<Pair<Integer, Integer>, Integer> ilm = new Pair<Pair<Integer, Integer>, Integer>(new Pair<Integer, Integer>(i, e_words.size()), f_words.size());
     public abstract double q_jilm(int j, int i, int l, int m);
     
     /*
