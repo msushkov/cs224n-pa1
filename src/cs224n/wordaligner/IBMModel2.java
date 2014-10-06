@@ -12,8 +12,7 @@ public class IBMModel2 extends IBMModel {
     
     @Override
     public double q_jilm(int j, int i, int l, int m) {
-        Pair<Pair<Integer, Integer>, Integer> ilm = new Pair<Pair<Integer, Integer>, Integer>(new Pair<Integer, Integer>(i, l), m);
-        return q_jilm.getCount(ilm, j);
+        return q_jilm.getCount(convertIntsToStringKey(i, l, m), j);
     }
 
     @Override
@@ -46,9 +45,7 @@ public class IBMModel2 extends IBMModel {
                         c_ef.incrementCount(e.get(j), f.get(i), delta);
                         c_e.incrementCount(e.get(j), delta);
 
-                        Pair<Integer, Integer> il = new Pair<Integer, Integer>(i, e.size());
-                        Pair<Pair<Integer, Integer>, Integer> ilm = new Pair<Pair<Integer, Integer>, Integer>(il, f.size());
-
+                        String ilm = convertIntsToStringKey(i, e.size(), f.size());
                         c_jilm.incrementCount(ilm, j, delta);
                         c_ilm.incrementCount(ilm, delta);
                     }
@@ -64,7 +61,7 @@ public class IBMModel2 extends IBMModel {
             }
 
             
-            for (Pair<Pair<Integer, Integer>, Integer> ilm : c_jilm.keySet()) {
+            for (String ilm : c_jilm.keySet()) {
                 for (Integer j : c_jilm.getCounter(ilm).keySet()) {
                     q_jilm.setCount(ilm, j, c_jilm.getCount(ilm, j) / c_ilm.getCount(ilm));
                 }
@@ -96,8 +93,7 @@ public class IBMModel2 extends IBMModel {
             
             for (int i = 0; i < m; i++) {
                 for (int j = 0; j < l; j++) {
-                    Pair<Pair<Integer, Integer>, Integer> ilm = new Pair<Pair<Integer, Integer>, Integer>(new Pair<Integer, Integer>(i, l), m);
-                    q_jilm.setCount(ilm, j, getRand());
+                    q_jilm.setCount(convertIntsToStringKey(i, l, m), j, getRand());
                 }
             }
         }

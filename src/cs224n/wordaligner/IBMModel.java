@@ -16,15 +16,15 @@ public abstract class IBMModel implements WordAligner {
     
     // Parameters
     CounterMap<String, String> t_fe = new CounterMap<String, String>();
-    CounterMap<Pair<Pair<Integer, Integer>, Integer>, Integer> q_jilm = new CounterMap<Pair<Pair<Integer, Integer>, Integer>, Integer>();
+    CounterMap<String, Integer> q_jilm = new CounterMap<String, Integer>();
     
     // Counters
     CounterMap<String, String> c_ef = new CounterMap<String, String>();
     Counter<String> c_e = new Counter<String>();
     
     // c(j, i, l, m)
-    CounterMap<Pair<Pair<Integer, Integer>, Integer>, Integer> c_jilm = new CounterMap<Pair<Pair<Integer, Integer>, Integer>, Integer>();
-    Counter<Pair<Pair<Integer, Integer>, Integer>> c_ilm = new Counter<Pair<Pair<Integer, Integer>, Integer>>(); 
+    CounterMap<String, Integer> c_jilm = new CounterMap<String, Integer>();
+    Counter<String> c_ilm = new Counter<String>(); 
     
 	@Override
 	public Alignment align(SentencePair sentencePair) {
@@ -74,7 +74,14 @@ public abstract class IBMModel implements WordAligner {
     public void clearCounts() {
     	c_ef = new CounterMap<String, String>();
         c_e = new Counter<String>();
-        c_jilm = new CounterMap<Pair<Pair<Integer, Integer>, Integer>, Integer>();
-        c_ilm = new Counter<Pair<Pair<Integer, Integer>, Integer>>(); 
+        c_jilm = new CounterMap<String, Integer>();
+        c_ilm = new Counter<String>(); 
+    }
+    
+    /*
+     * Given three ints, converts them to a unique string representation.
+     */
+    public String convertIntsToStringKey(int i, int l, int m) {
+        return "" + i + "_" + l + "_" + m;
     }
 }
