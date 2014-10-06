@@ -57,7 +57,7 @@ public class IBMModel1 extends IBMModel {
                         }
                     }
                     
-                    for (int j = 0; j < e.size(); j++) {
+                    for (int j = 0; j < l; j++) {
                         String currEWord = e.get(j);
                         
                         double delta = 0.0;

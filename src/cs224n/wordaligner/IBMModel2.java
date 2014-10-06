@@ -1,5 +1,6 @@
 package cs224n.wordaligner;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -31,7 +32,7 @@ public class IBMModel2 extends IBMModel {
             for (int k = 0; k < trainingData.size(); k++) {
                 SentencePair currDataPoint = trainingData.get(k);
                 
-                List<String> f = currDataPoint.getSourceWords();
+                List<String> f = new ArrayList<String>(currDataPoint.getSourceWords());
                 f.add(NULL_WORD);
                 List<String> e = currDataPoint.getTargetWords();
                 
