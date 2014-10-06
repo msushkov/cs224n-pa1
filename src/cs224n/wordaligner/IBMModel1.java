@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
 
+import cs224n.util.CounterMap;
+
 public class IBMModel1 extends IBMModel {
 
     @Override
@@ -67,6 +69,7 @@ public class IBMModel1 extends IBMModel {
             
             // M-Step
             System.out.println("M-step...");
+            t_fe = new CounterMap<String, String>();
             for (String e : c_ef.keySet()) {
                 for (String f : c_ef.getCounter(e).keySet()) {
                     t_fe.setCount(f, e, c_ef.getCount(e, f) / c_e.getCount(e));
