@@ -34,8 +34,8 @@ public class IBMModel2 extends IBMModel {
             for (int k = 0; k < trainingData.size(); k++) {
                 SentencePair currDataPoint = trainingData.get(k);
                 
-                List<String> f = currDataPoint.getSourceWords();
-                //f.add(NULL_WORD);
+                List<String> f = new ArrayList<String>(currDataPoint.getSourceWords());
+                f.add(NULL_WORD);
                 List<String> e = currDataPoint.getTargetWords();
                 
                 int m = f.size(); // length without the null word
@@ -47,18 +47,18 @@ public class IBMModel2 extends IBMModel {
                     // compute the normalization factor for delta
                     double deltaNormalization = 0.0;
                     for (int j = 0; j < l; j++) {
-                        deltaNormalization += q_jilm(j, i, l, m + 1) * t_fe.getCount(currFWord, e.get(j));
+                        deltaNormalization += q_jilm(j, i, l, m) * t_fe.getCount(currFWord, e.get(j));
                     }
 
                     for (int j = 0; j < l; j++) {
                         String currEWord = e.get(j);
                         
-                        double delta = q_jilm(j, i, l, m + 1) * t_fe.getCount(currFWord, currEWord) / deltaNormalization; 
+                        double delta = q_jilm(j, i, l, m) * t_fe.getCount(currFWord, currEWord) / deltaNormalization; 
 
                         c_ef.incrementCount(currEWord, currFWord, delta);
                         c_e.incrementCount(currEWord, delta);
 
-                        String ilm = convertIntsToStringKey(i, l, m + 1);
+                        String ilm = convertIntsToStringKey(i, l, m);
                         c_jilm.incrementCount(ilm, j, delta);
                         c_ilm.incrementCount(ilm, delta);
                     }
@@ -66,27 +66,27 @@ public class IBMModel2 extends IBMModel {
                 
                 // NULL WORD
                 
-                int i = m;
-                String currFWord = NULL_WORD;
-
-                // compute the normalization factor for delta
-                double deltaNormalization = 0.0;
-                for (int j = 0; j < l; j++) {
-                    deltaNormalization += q_jilm(j, i, l, m + 1) * t_fe.getCount(currFWord, e.get(j));
-                }
-
-                for (int j = 0; j < l; j++) {
-                    String currEWord = e.get(j);
-
-                    double delta = q_jilm(j, i, l, m + 1) * t_fe.getCount(currFWord, currEWord) / deltaNormalization; 
-
-                    c_ef.incrementCount(currEWord, currFWord, delta);
-                    c_e.incrementCount(currEWord, delta);
-
-                    String ilm = convertIntsToStringKey(i, l, m + 1);
-                    c_jilm.incrementCount(ilm, j, delta);
-                    c_ilm.incrementCount(ilm, delta);
-                }
+//                int i = m;
+//                String currFWord = NULL_WORD;
+//
+//                // compute the normalization factor for delta
+//                double deltaNormalization = 0.0;
+//                for (int j = 0; j < l; j++) {
+//                    deltaNormalization += q_jilm(j, i, l, m + 1) * t_fe.getCount(currFWord, e.get(j));
+//                }
+//
+//                for (int j = 0; j < l; j++) {
+//                    String currEWord = e.get(j);
+//
+//                    double delta = q_jilm(j, i, l, m + 1) * t_fe.getCount(currFWord, currEWord) / deltaNormalization; 
+//
+//                    c_ef.incrementCount(currEWord, currFWord, delta);
+//                    c_e.incrementCount(currEWord, delta);
+//
+//                    String ilm = convertIntsToStringKey(i, l, m + 1);
+//                    c_jilm.incrementCount(ilm, j, delta);
+//                    c_ilm.incrementCount(ilm, delta);
+//                }
             }
 
             // M-Step
@@ -122,12 +122,12 @@ public class IBMModel2 extends IBMModel {
         
         // initialize q_jilm randomly, then normalize
         for (int k = 0; k < trainingData.size(); k++) {
-            List<String> f = trainingData.get(k).getSourceWords();
-            //f.add(NULL_WORD);
+            List<String> f = new ArrayList<String>(trainingData.get(k).getSourceWords());
+            f.add(NULL_WORD);
             List<String> e = trainingData.get(k).getTargetWords();
             
             int l = e.size();
-            int m = f.size() + 1; // the additional 1 accounts for the NULL WORD
+            int m = f.size(); // the additional 1 accounts for the NULL WORD
             
             for (int i = 0; i < m; i++) {
                 for (int j = 0; j < l; j++) {

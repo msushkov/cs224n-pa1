@@ -33,8 +33,8 @@ public class IBMModel1 extends IBMModel {
             // E-Step
             System.out.println("E-step...");
             for (int k = 0; k < trainingData.size(); k++) {
-                List<String> f = trainingData.get(k).getSourceWords();
-                //f.add(NULL_WORD);
+                List<String> f = new ArrayList<String>(trainingData.get(k).getSourceWords());
+                f.add(NULL_WORD);
                 List<String> e = trainingData.get(k).getTargetWords();
                 
                 int m = f.size(); // length without the null word
@@ -52,10 +52,10 @@ public class IBMModel1 extends IBMModel {
                         
                         // on the first iteration, t_fe are just uniformly initialized
                         if (p == 0) {
-                            deltaNormalization += q_jilm(j, i, l, m + 1) * tfe_p0;
+                            deltaNormalization += q_jilm(j, i, l, m) * tfe_p0;
                         }
                         else {
-                            deltaNormalization += q_jilm(j, i, l, m + 1) * t_fe.getCount(currFWord, e.get(j));
+                            deltaNormalization += q_jilm(j, i, l, m) * t_fe.getCount(currFWord, e.get(j));
                         }
                     }
                     
@@ -65,10 +65,10 @@ public class IBMModel1 extends IBMModel {
                         double delta = 0.0;
                         // on the first iteration, t_fe are just uniformly initialized
                         if (p == 0) {
-                            delta = q_jilm(j, i, l, m + 1) * tfe_p0 / deltaNormalization;
+                            delta = q_jilm(j, i, l, m) * tfe_p0 / deltaNormalization;
                         }
                         else {
-                            delta = q_jilm(j, i, l, m + 1) * t_fe.getCount(currFWord, currEWord) / deltaNormalization;
+                            delta = q_jilm(j, i, l, m) * t_fe.getCount(currFWord, currEWord) / deltaNormalization;
                         }
                         
                         c_ef.incrementCount(currEWord, currFWord, delta);
@@ -77,36 +77,36 @@ public class IBMModel1 extends IBMModel {
                 }
                 
                 // NULL WORD
-                int i = m;
-                String currFWord = NULL_WORD;
-                
-                // compute the normalization factor for delta
-                double deltaNormalization = 0.0;
-                for (int j = 0; j < l; j++) {
-                    // on the first iteration, t_fe are just uniformly initialized
-                    if (p == 0) {
-                        deltaNormalization += q_jilm(j, i, l, m + 1) * tfe_p0;
-                    }
-                    else {
-                        deltaNormalization += q_jilm(j, i, l, m + 1) * t_fe.getCount(currFWord, e.get(j));
-                    }
-                }
-                
-                for (int j = 0; j < l; j++) {
-                    String currEWord = e.get(j);
-                    
-                    double delta = 0.0;
-                    // on the first iteration, t_fe are just uniformly initialized
-                    if (p == 0) {
-                        delta = q_jilm(j, i, l, m + 1) * tfe_p0 / deltaNormalization;
-                    }
-                    else {
-                        delta = q_jilm(j, i, l, m + 1) * t_fe.getCount(currFWord, currEWord) / deltaNormalization;
-                    }
-                    
-                    c_ef.incrementCount(currEWord, currFWord, delta);
-                    c_e.incrementCount(currEWord, delta);
-                }
+//                int i = m;
+//                String currFWord = NULL_WORD;
+//                
+//                // compute the normalization factor for delta
+//                double deltaNormalization = 0.0;
+//                for (int j = 0; j < l; j++) {
+//                    // on the first iteration, t_fe are just uniformly initialized
+//                    if (p == 0) {
+//                        deltaNormalization += q_jilm(j, i, l, m + 1) * tfe_p0;
+//                    }
+//                    else {
+//                        deltaNormalization += q_jilm(j, i, l, m + 1) * t_fe.getCount(currFWord, e.get(j));
+//                    }
+//                }
+//                
+//                for (int j = 0; j < l; j++) {
+//                    String currEWord = e.get(j);
+//                    
+//                    double delta = 0.0;
+//                    // on the first iteration, t_fe are just uniformly initialized
+//                    if (p == 0) {
+//                        delta = q_jilm(j, i, l, m + 1) * tfe_p0 / deltaNormalization;
+//                    }
+//                    else {
+//                        delta = q_jilm(j, i, l, m + 1) * t_fe.getCount(currFWord, currEWord) / deltaNormalization;
+//                    }
+//                    
+//                    c_ef.incrementCount(currEWord, currFWord, delta);
+//                    c_e.incrementCount(currEWord, delta);
+//                }
             }
             
             // M-Step
