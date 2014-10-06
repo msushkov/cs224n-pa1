@@ -5,7 +5,6 @@ import java.util.Random;
 
 import cs224n.util.CounterMap;
 import cs224n.util.Counters;
-import cs224n.util.Pair;
 
 public class IBMModel2 extends IBMModel {
 
@@ -30,23 +29,33 @@ public class IBMModel2 extends IBMModel {
             // E-Step
             System.out.println("E-step...");
             for (int k = 0; k < trainingData.size(); k++) {
-                List<String> f = trainingData.get(k).getSourceWords();
+                SentencePair currDataPoint = trainingData.get(k);
+                
+                List<String> f = currDataPoint.getSourceWords();
                 f.add(NULL_WORD);
-                List<String> e = trainingData.get(k).getTargetWords();
-                for (int i = 0; i < f.size(); i++) {
+                List<String> e = currDataPoint.getTargetWords();
+                
+                int m = f.size();
+                int l = e.size();
+                
+                for (int i = 0; i < m; i++) {
+                    String currFWord = f.get(i);
+                    
                     // compute the normalization factor for delta
                     double deltaNormalization = 0.0;
-                    for (int j = 0; j < e.size(); j++) {
-                        deltaNormalization += q_jilm(j, i, e.size(), f.size()) * t_fe.getCount(f.get(i), e.get(j));
+                    for (int j = 0; j < l; j++) {
+                        deltaNormalization += q_jilm(j, i, l, m) * t_fe.getCount(currFWord, e.get(j));
                     }
 
-                    for (int j = 0; j < e.size(); j++) {
-                        double delta = q_jilm(j, i, e.size(), f.size()) * t_fe.getCount(f.get(i), e.get(j)) / deltaNormalization; 
+                    for (int j = 0; j < l; j++) {
+                        String currEWord = e.get(j);
+                        
+                        double delta = q_jilm(j, i, l, m) * t_fe.getCount(currFWord, currEWord) / deltaNormalization; 
 
-                        c_ef.incrementCount(e.get(j), f.get(i), delta);
-                        c_e.incrementCount(e.get(j), delta);
+                        c_ef.incrementCount(currEWord, currFWord, delta);
+                        c_e.incrementCount(currEWord, delta);
 
-                        String ilm = convertIntsToStringKey(i, e.size(), f.size());
+                        String ilm = convertIntsToStringKey(i, l, m);
                         c_jilm.incrementCount(ilm, j, delta);
                         c_ilm.incrementCount(ilm, delta);
                     }

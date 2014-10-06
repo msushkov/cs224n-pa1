@@ -5,14 +5,13 @@ import java.util.List;
 
 import cs224n.util.Counter;
 import cs224n.util.CounterMap;
-import cs224n.util.Pair;
 
 /*
  * Superclass for IBM Models 1 and 2.
  */
 public abstract class IBMModel implements WordAligner {
 
-    int NUM_ITERS = 40;
+    int NUM_ITERS = 30;
     
     // Parameters
     CounterMap<String, String> t_fe = new CounterMap<String, String>();
@@ -36,19 +35,24 @@ public abstract class IBMModel implements WordAligner {
 		f_words.add(NULL_WORD);
 		List<String> e_words = sentencePair.getTargetWords();
 		
-		for (int i = 0; i < e_words.size(); i++) {
+		int m = f_words.size();
+		int l = e_words.size();
+		
+		for (int i = 0; i < l; i++) {
 			String curr_e_word = e_words.get(i);
+			
 			double maxValue = 0;
 			int maxIndex = 0;
-			for (int j = 0; j < f_words.size(); j++) {
-				String curr_f_word = f_words.get(j);
-				double value = q_jilm(j, i, e_words.size(), f_words.size()) * t_fe.getCount(curr_f_word, curr_e_word);
+			
+			for (int j = 0; j < m; j++) {
+				double value = q_jilm(j, i, l, m) * t_fe.getCount(f_words.get(j), curr_e_word);
+				
 				if (value > maxValue) {
 					maxValue = value;
 					maxIndex = j;
 				}
 			}
-			if (maxIndex != f_words.size()-1) {
+			if (maxIndex != m - 1) {
 				alignment.addPredictedAlignment(i, maxIndex);
 			}
 		}
