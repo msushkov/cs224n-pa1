@@ -3,6 +3,7 @@ package cs224n.wordaligner;
 import java.util.List;
 import java.util.Random;
 
+import cs224n.util.CounterMap;
 import cs224n.util.Counters;
 import cs224n.util.Pair;
 
@@ -53,6 +54,8 @@ public class IBMModel2 extends IBMModel {
             }
 
             // M-Step
+            t_fe = new CounterMap<String, String>();
+            q_jilm = new CounterMap<String, Integer>();
             System.out.println("M-step...");
             for (String e : c_ef.keySet()) {
                 for (String f : c_ef.getCounter(e).keySet()) {
@@ -60,7 +63,6 @@ public class IBMModel2 extends IBMModel {
                 }
             }
 
-            
             for (String ilm : c_jilm.keySet()) {
                 for (Integer j : c_jilm.getCounter(ilm).keySet()) {
                     q_jilm.setCount(ilm, j, c_jilm.getCount(ilm, j) / c_ilm.getCount(ilm));

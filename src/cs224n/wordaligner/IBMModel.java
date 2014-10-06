@@ -12,7 +12,7 @@ import cs224n.util.Pair;
  */
 public abstract class IBMModel implements WordAligner {
 
-    int NUM_ITERS = 50;
+    int NUM_ITERS = 40;
     
     // Parameters
     CounterMap<String, String> t_fe = new CounterMap<String, String>();
