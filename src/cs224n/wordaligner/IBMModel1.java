@@ -33,17 +33,17 @@ public class IBMModel1 extends IBMModel {
             // E-Step
             System.out.println("E-step...");
             for (int k = 0; k < trainingData.size(); k++) {
-                List<String> f = new ArrayList<String>(trainingData.get(k).getSourceWords());
-                f.add(NULL_WORD);
+                List<String> f = trainingData.get(k).getSourceWords();
+                //f.add(NULL_WORD);
                 List<String> e = trainingData.get(k).getTargetWords();
                 
                 int m = f.size();
                 int l = e.size();
                 
+                double tfe_p0 = 1.0 / numFWords;
+                
                 for (int i = 0; i < m; i++) {
                     String currFWord = f.get(i);
-                    
-                    double tfe_p0 = 1.0 / numFWords;
                     
                     // compute the normalization factor for delta
                     double deltaNormalization = 0.0;
@@ -72,6 +72,38 @@ public class IBMModel1 extends IBMModel {
                         c_ef.incrementCount(currEWord, currFWord, delta);
                         c_e.incrementCount(currEWord, delta);
                     }
+                }
+                
+                // NULL WORD
+                int i = m;
+                String currFWord = NULL_WORD;
+                
+                // compute the normalization factor for delta
+                double deltaNormalization = 0.0;
+                for (int j = 0; j < l; j++) {
+                    // on the first iteration, t_fe are just uniformly initialized
+                    if (p == 0) {
+                        deltaNormalization += q_jilm(j, i, l, m) * tfe_p0;
+                    }
+                    else {
+                        deltaNormalization += q_jilm(j, i, l, m) * t_fe.getCount(currFWord, e.get(j));
+                    }
+                }
+                
+                for (int j = 0; j < l; j++) {
+                    String currEWord = e.get(j);
+                    
+                    double delta = 0.0;
+                    // on the first iteration, t_fe are just uniformly initialized
+                    if (p == 0) {
+                        delta = q_jilm(j, i, l, m) * tfe_p0 / deltaNormalization;
+                    }
+                    else {
+                        delta = q_jilm(j, i, l, m) * t_fe.getCount(currFWord, currEWord) / deltaNormalization;
+                    }
+                    
+                    c_ef.incrementCount(currEWord, currFWord, delta);
+                    c_e.incrementCount(currEWord, delta);
                 }
             }
             
