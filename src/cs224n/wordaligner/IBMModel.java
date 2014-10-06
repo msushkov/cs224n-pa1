@@ -16,14 +16,14 @@ public abstract class IBMModel implements WordAligner {
     
     // Parameters
     CounterMap<String, String> t_fe = new CounterMap<String, String>();
-    CounterMap<Integer, Pair<Pair<Integer, Integer>, Integer>> q_jilm = new CounterMap<Integer, Pair<Pair<Integer, Integer>, Integer>>();
+    CounterMap<Pair<Pair<Integer, Integer>, Integer>, Integer> q_jilm = new CounterMap<Pair<Pair<Integer, Integer>, Integer>, Integer>();
     
     // Counters
     CounterMap<String, String> c_ef = new CounterMap<String, String>();
     Counter<String> c_e = new Counter<String>();
     
     // c(j, i, l, m)
-    CounterMap<Integer, Pair<Pair<Integer, Integer>, Integer>> c_jilm = new CounterMap<Integer, Pair<Pair<Integer, Integer>, Integer>>();
+    CounterMap<Pair<Pair<Integer, Integer>, Integer>, Integer> c_jilm = new CounterMap<Pair<Pair<Integer, Integer>, Integer>, Integer>();
     Counter<Pair<Pair<Integer, Integer>, Integer>> c_ilm = new Counter<Pair<Pair<Integer, Integer>, Integer>>(); 
     
 	@Override
@@ -70,7 +70,7 @@ public abstract class IBMModel implements WordAligner {
     public void clearCounts() {
     	c_ef = new CounterMap<String, String>();
         c_e = new Counter<String>();
-        c_jilm = new CounterMap<Integer, Pair<Pair<Integer, Integer>, Integer>>();
+        c_jilm = new CounterMap<Pair<Pair<Integer, Integer>, Integer>, Integer>();
         c_ilm = new Counter<Pair<Pair<Integer, Integer>, Integer>>(); 
     }
 }
