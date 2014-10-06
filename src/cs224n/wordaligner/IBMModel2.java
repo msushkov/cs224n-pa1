@@ -18,6 +18,8 @@ public class IBMModel2 extends IBMModel {
 
     @Override
     public void train(List<SentencePair> trainingData) {
+        System.out.println("NUM ITERS = " + NUM_ITERS);
+        
         System.out.println("Starting train() for model 2...");
         
         initParams(trainingData);
