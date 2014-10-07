@@ -22,7 +22,8 @@ public class IBMModel1 extends IBMModel {
         for (SentencePair dataPoint : trainingData) {
             fr_words.addAll(dataPoint.sourceWords);
         }
-        int numFWords = fr_words.size();
+        
+        double tfe_p0 = 1.0 / fr_words.size();
         
         // Iterate a bunch of times; hopefully it converges by then
         for (int p = 0; p < NUM_ITERS; p++) {
@@ -33,20 +34,21 @@ public class IBMModel1 extends IBMModel {
             // E-Step
             System.out.println("E-step...");
             for (int k = 0; k < trainingData.size(); k++) {
-                List<String> f = new ArrayList<String>(trainingData.get(k).getSourceWords());
-                f.add(NULL_WORD);
-                List<String> e = trainingData.get(k).getTargetWords();
+                List<String> f = trainingData.get(k).getSourceWords();
+                List<String> e = new ArrayList<String>(trainingData.get(k).getTargetWords());
+                e.add(NULL_WORD);
                 
                 int m = f.size();
                 int l = e.size();
                 
-                double tfe_p0 = 1.0 / numFWords;
-                
+                // source
                 for (int i = 0; i < m; i++) {
                     String currFWord = f.get(i);
                     
                     // compute the normalization factor for delta
                     double deltaNormalization = 0.0;
+                    
+                    // target
                     for (int j = 0; j < l; j++) {
                         
                         // on the first iteration, t_fe are just uniformly initialized
@@ -58,6 +60,7 @@ public class IBMModel1 extends IBMModel {
                         }
                     }
                     
+                    // target
                     for (int j = 0; j < l; j++) {
                         String currEWord = e.get(j);
                         

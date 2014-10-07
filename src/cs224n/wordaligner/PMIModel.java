@@ -6,6 +6,7 @@ import java.util.List;
 import cs224n.util.Counter;
 import cs224n.util.CounterMap;
 
+// TODO: fix NULL WORD!
 public class PMIModel implements WordAligner {
 	Counter<String> c_f = new Counter<String>();
 	Counter<String> c_e = new Counter<String>();

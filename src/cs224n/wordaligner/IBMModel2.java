@@ -34,22 +34,26 @@ public class IBMModel2 extends IBMModel {
             for (int k = 0; k < trainingData.size(); k++) {
                 SentencePair currDataPoint = trainingData.get(k);
                 
-                List<String> f = new ArrayList<String>(currDataPoint.getSourceWords());
-                f.add(NULL_WORD);
-                List<String> e = currDataPoint.getTargetWords();
+                List<String> f = currDataPoint.getSourceWords();
+                List<String> e = new ArrayList<String>(currDataPoint.getTargetWords());
+                e.add(NULL_WORD);
                 
                 int m = f.size();
                 int l = e.size();
                 
+                // source
                 for (int i = 0; i < m; i++) {
                     String currFWord = f.get(i);
                     
                     // compute the normalization factor for delta
                     double deltaNormalization = 0.0;
+                    
+                    // target
                     for (int j = 0; j < l; j++) {
                         deltaNormalization += q_jilm(j, i, l, m) * t_fe.getCount(currFWord, e.get(j));
                     }
 
+                    // target
                     for (int j = 0; j < l; j++) {
                         String currEWord = e.get(j);
                         
@@ -98,9 +102,9 @@ public class IBMModel2 extends IBMModel {
         
         // initialize q_jilm randomly, then normalize
         for (int k = 0; k < trainingData.size(); k++) {
-            List<String> f = new ArrayList<String>(trainingData.get(k).getSourceWords());
-            f.add(NULL_WORD);
-            List<String> e = trainingData.get(k).getTargetWords();
+            List<String> f = trainingData.get(k).getSourceWords();
+            List<String> e = new ArrayList<String>(trainingData.get(k).getTargetWords());
+            e.add(NULL_WORD);
             
             int l = e.size();
             int m = f.size();

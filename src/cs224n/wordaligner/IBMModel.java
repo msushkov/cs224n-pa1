@@ -11,7 +11,7 @@ import cs224n.util.CounterMap;
  */
 public abstract class IBMModel implements WordAligner {
 
-    int NUM_ITERS = 30;
+    int NUM_ITERS = 20;
     
     // Parameters
     CounterMap<String, String> t_fe = new CounterMap<String, String>();
@@ -26,38 +26,36 @@ public abstract class IBMModel implements WordAligner {
     Counter<String> c_ilm = new Counter<String>(); 
     
 	@Override
-	public Alignment align(SentencePair sentencePair) {
-	    //System.out.println("Starting align()...");
-	    
+	public Alignment align(SentencePair sentencePair) {	    
 		Alignment alignment = new Alignment();
 		
-		List<String> f_words = new ArrayList<String>(sentencePair.getSourceWords());
-		f_words.add(NULL_WORD);
-		List<String> e_words = sentencePair.getTargetWords();
+		List<String> f_words = sentencePair.getSourceWords();
+		List<String> e_words = new ArrayList<String>(sentencePair.getTargetWords());
+		e_words.add(NULL_WORD);
 		
 		int m = f_words.size();
 		int l = e_words.size();
 		
-		for (int i = 0; i < l; i++) {
-			String curr_e_word = e_words.get(i);
-			
-			double maxValue = 0;
-			int maxIndex = 0;
-			
-			for (int j = 0; j < m; j++) {
-				double value = q_jilm(j, i, l, m) * t_fe.getCount(f_words.get(j), curr_e_word);
-				
-				if (value > maxValue) {
-					maxValue = value;
-					maxIndex = j;
-				}
-			}
-			if (maxIndex != m - 1) {
-				alignment.addPredictedAlignment(i, maxIndex);
-			}
-		}
-		
-		//System.out.println("Done with align().");
+		// source
+		for (int i = 0; i < m; i++) {
+            String curr_f_word = f_words.get(i);
+            
+            double maxValue = 0;
+            int maxIndex = 0;
+            
+            // target
+            for (int j = 0; j < l; j++) {
+                double value = q_jilm(j, i, l, m) * t_fe.getCount(curr_f_word, e_words.get(j));
+                
+                if (value > maxValue) {
+                    maxValue = value;
+                    maxIndex = j;
+                }
+            }
+            if (maxIndex != l - 1) {
+                alignment.addPredictedAlignment(maxIndex, i);
+            }
+        }
 		
 		return alignment;
 	}
