@@ -16,16 +16,16 @@ public class PMIModel implements WordAligner {
 	public Alignment align(SentencePair sentencePair) {
 		Alignment alignment = new Alignment();
 		
-		List<String> f_words = new ArrayList<String>(sentencePair.getSourceWords());
-		f_words.add(NULL_WORD);
-		List<String> e_words = sentencePair.getTargetWords();
+		List<String> f_words = sentencePair.getSourceWords();
+		List<String> e_words = new ArrayList<String>(sentencePair.getTargetWords());
+		e_words.add(NULL_WORD);
 		
-		for (int i = 0; i < e_words.size(); i++) {
-			String curr_e_word = e_words.get(i);
+		for (int i = 0; i < f_words.size(); i++) {
+			String curr_f_word = f_words.get(i);
 			double maxValue = 0;
 			int maxIndex = 0;
-			for (int j = 0; j < f_words.size(); j++) {
-				String curr_f_word = f_words.get(j);
+			for (int j = 0; j < e_words.size(); j++) {
+				String curr_e_word = e_words.get(j);
 				double p_fe = c_fe.getCount(curr_f_word, curr_e_word) / c_fe.totalCount();
 				double p_e = c_e.getCount(curr_e_word) / c_e.totalCount();
 				double p_f = c_f.getCount(curr_f_word) / c_f.totalCount();
@@ -36,7 +36,7 @@ public class PMIModel implements WordAligner {
 				}
 			}
 			if (maxIndex != f_words.size()-1) {
-				alignment.addPredictedAlignment(i, maxIndex);
+				alignment.addPredictedAlignment(maxIndex, i);
 			}
 		}
 		
