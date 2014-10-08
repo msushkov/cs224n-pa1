@@ -35,7 +35,7 @@ public class PMIModel implements WordAligner {
 					maxIndex = j;
 				}
 			}
-			if (maxIndex != f_words.size()-1) {
+			if (maxIndex != e_words.size() - 1) {
 				alignment.addPredictedAlignment(maxIndex, i);
 			}
 		}
